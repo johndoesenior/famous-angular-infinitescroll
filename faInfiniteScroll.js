@@ -14,7 +14,7 @@ angular.module('faInfiniteScroll',[
         return {
             restrict: 'EA',
             template: '',
-            scope: {todo: '&', when: '=', height: '=', length: '@'},
+            scope: {todo: '&', when: '=', height: '=', length: '@', handler: '='},
             controllerAs: 'infinteScroll',
             controller: function($scope) {
                 var infiniteScroll = this;
@@ -55,22 +55,34 @@ angular.module('faInfiniteScroll',[
                     return infiniteScroll.scrollview;
                 };
 
-                /**
-                 * Check for overpulls
-                 */
-                Timer.every(function() {
-                    totalHeight = $scope.height * $scope.length;
-                    infiniteScroll.when = -((totalHeight * when) - totalHeight);
-                    if(getScrollView().getAbsolutePosition() >= infiniteScroll.when && !infiniteScroll.inProgress && oldLength != currentLength) {
-                        infiniteScroll.page++;
-                        infiniteScroll.inProgress = true;
-                        $scope.todo(); // infinte scroll done!
+                var currentLocation;
+                $scope.handler.on("touchmove",function(){
+                    if(getScrollView() && angular.isDefined(getScrollView().getAbsolutePosition())){
+                        totalHeight = $scope.height * $scope.length;
+                        infiniteScroll.when = -((totalHeight * when) - totalHeight);
+                        if(getScrollView().getAbsolutePosition() >= infiniteScroll.when && !infiniteScroll.inProgress && oldLength != currentLength) {
+                            infiniteScroll.page++;
+                            infiniteScroll.inProgress = true;
+                            currentLocation = (getScrollView().getAbsolutePosition());
+
+                            // WOOHOO
+                            $scope.$apply(function(){
+                                $scope.todo();
+                            });
+                            getScrollView().setPosition(currentLocation);
+                        }
                     }
-                }, 2);
+                });
 
                 $scope.$on("infiniteScroll.done", function(){
                     oldLength = _.clone(currentLength);
                     currentLength = _.clone($scope.length);
+
+                    // Fix bug length is not set properly
+                    setTimeout(function(){
+                        currentLength = _.clone($scope.length);
+                    },10);
+
                     infiniteScroll.inProgress = false;
                 });
             }
