@@ -18,7 +18,6 @@ angular.module('faInfiniteScroll',[
             controllerAs: 'infinteScroll',
             controller: function($scope) {
                 var infiniteScroll = this;
-                var Transitionable = $famous['famous/transitions/Transitionable'];
                 var Timer = $famous['famous/utilities/Timer'];
 
                 var totalHeight = 0;
@@ -27,7 +26,7 @@ angular.module('faInfiniteScroll',[
                 var currentLength = _.clone($scope.length);
 
                 infiniteScroll.inProgress = false;
-                infiniteScroll.page = 0;
+                infiniteScroll.page = 0; // will be used later for calculations
 
                 /**
                  * Caching the render node
@@ -55,6 +54,12 @@ angular.module('faInfiniteScroll',[
                     return infiniteScroll.scrollview;
                 };
 
+                /**
+                 * On mouse wheel (@BUG: Should be 'update')
+                 * See: https://github.com/Famous/famous/issues/437
+                 *
+                 * Calculate position and trigger 'todo' callback when needed
+                 */
                 var currentLocation;
                 $scope.handler.on("wheel",function(){
                     if(getScrollView() && angular.isDefined(getScrollView().getAbsolutePosition())){
