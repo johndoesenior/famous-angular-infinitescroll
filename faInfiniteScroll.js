@@ -56,7 +56,7 @@ angular.module('faInfiniteScroll',[
                 };
 
                 var currentLocation;
-                $scope.handler.on("touchmove",function(){
+                $scope.handler.on("wheel",function(){
                     if(getScrollView() && angular.isDefined(getScrollView().getAbsolutePosition())){
                         totalHeight = $scope.height * $scope.length;
                         infiniteScroll.when = -((totalHeight * when) - totalHeight);
