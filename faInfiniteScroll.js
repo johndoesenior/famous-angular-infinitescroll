@@ -14,7 +14,7 @@ angular.module('faInfiniteScroll',[
         return {
             restrict: 'EA',
             template: '',
-            scope: {todo: '&', when: '=', height: '=', length: '@', handler: '='},
+            scope: {cb: '&', when: '=', height: '=', length: '@', handler: '='},
             controllerAs: 'infinteScroll',
             controller: function($scope) {
                 var infiniteScroll = this;
@@ -58,7 +58,7 @@ angular.module('faInfiniteScroll',[
                  * On mouse wheel (@BUG: Should be 'update')
                  * See: https://github.com/Famous/famous/issues/437
                  *
-                 * Calculate position and trigger 'todo' callback when needed
+                 * Calculate position and trigger 'cb' callback when needed
                  */
                 var currentLocation;
                 $scope.handler.on("wheel",function(){
@@ -72,7 +72,7 @@ angular.module('faInfiniteScroll',[
 
                             // WOOHOO
                             $scope.$apply(function(){
-                                $scope.todo();
+                                $scope.cb();
                             });
                             getScrollView().setPosition(currentLocation);
                         }
