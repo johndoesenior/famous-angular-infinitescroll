@@ -1,8 +1,8 @@
 {
   "name": "famous-angular-infinitescroll",
   "main": "faInfiniteScroll.js",
-  "version": "0.0.1",
-    "dependencies": {
+  "version": "0.0.2",
+  "dependencies": {
     "angular": "1.2.22",
     "famous-angular": "0.5.0"
   }
